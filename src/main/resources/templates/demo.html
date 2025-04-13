@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mentor Demo</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Mentor Demo</h1>
+
+      <!-- 題目呈現區 -->
+      <h2>請選擇題目：</h2>
+      <form action="/select" method="get">
+        <select name="id">
+          <option
+            th:each="q : ${allQuestions}"
+            th:value="${q.id}"
+            th:text="${q.questionText}"
+            th:selected="${q.id == question.id}"
+          ></option>
+        </select>
+        <button type="submit">切換題目</button>
+      </form>
+
+      <!-- 答案輸入框 -->
+      <h2 th:text="'題目：' + ${question.questionText}">尚未選擇題目</h2>
+      <div class="answer-section">
+        <h2>您的答案</h2>
+
+        <form th:action="@{/evaluate}" method="post">
+          <input type="hidden" name="questionId" th:value="${question.id}" />
+          <textarea
+            name="studentAnswer"
+            rows="5"
+            cols="50"
+            placeholder="請輸入您的答案"
+            th:text="${studentAnswer != null ? studentAnswer : ''}"
+          ></textarea>
+          <br />
+          <!-- 提交按鈕 -->
+          <button type="submit">提交</button>
+        </form>
+      </div>
+
+      <!-- 評估結果顯示區 -->
+      <div
+        class="result-section"
+        th:if="${result != null}"
+        style="background-color: #f9f9f9; padding: 15px; border-radius: 5px"
+      >
+        <h2>AI 評估結果</h2>
+        <div
+          th:utext="${result.correctnessHtml}"
+          style="background-color: #e8f5e9; padding: 10px; border-radius: 5px"
+        ></div>
+        <!-- <p><strong>分數：</strong> <span th:text="${result.score}">80</span></p> -->
+        <p>
+          <strong>原始資料</strong>
+          <span th:text="${result.correctness}"
+            >語氣自然、基本正確、有輕微 AI 風格</span
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

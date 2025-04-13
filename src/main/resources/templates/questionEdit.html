@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>編輯題目</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Add dropdown for question list -->
+      <form th:action="@{/questionEdit/edit}" method="get">
+        <label for="questionSelect">選擇題目:</label>
+        <select id="questionSelect" name="questionid" required>
+          <option
+            th:each="question : ${questions}"
+            th:value="${question.questionid}"
+            th:text="${question.questiontext}"
+          ></option>
+        </select>
+        <button type="submit">編輯</button>
+      </form>
+      <!-- Add editing section -->
+      <div th:if="${selectedQuestion != null}">
+        <h3>編輯題目</h3>
+        <form th:action="@{/questionEdit/save}" method="post">
+          <input
+            type="hidden"
+            name="questionid"
+            th:value="${selectedQuestion.questionid}"
+          />
+          <div>
+            <label for="questionText">題目內容:</label>
+            <textarea
+              id="questionText"
+              name="questiontext"
+              rows="10"
+              cols="150"
+              required
+              th:text="${selectedQuestion != null ? selectedQuestion.questiontext : ''}"
+            ></textarea>
+          </div>
+          <div>
+            <label for="answertext">答案:</label>
+            <textarea
+              id="answertext"
+              name="answertext"
+              rows="10"
+              cols="150"
+              required
+              th:text="${selectedQuestion != null ? selectedQuestion.answertext : ''}"
+            ></textarea>
+          </div>
+          <button type="submit">儲存</button>
+        </form>
+        <form
+          th:action="@{/questionEdit/delete}"
+          method="post"
+          style="margin-top: 10px"
+        >
+          <input
+            type="hidden"
+            name="questionid"
+            th:value="${selectedQuestion.questionid}"
+          />
+          <button type="submit" style="background-color: red; color: white">
+            刪除
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
