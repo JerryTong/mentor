@@ -24,4 +24,4 @@ COPY --from=build /app/target/mentor.jar mentor.jar
 ENTRYPOINT ["java", "-jar", "mentor.jar"]
 
 # 曝露端口
-EXPOSE 8089
+EXPOSE 8080
