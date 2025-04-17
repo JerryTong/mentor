@@ -5,8 +5,11 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class EvaluationResult {
+public class EvaluationRequest {
+
     private List<ChatHistory> chatHistory;
 
-    private String prompt;
+    private int questionId;
+
+    private String studentAnswer;
 }

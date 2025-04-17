@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jerry.mentor.entity.Question;
@@ -46,7 +45,7 @@ public class DemoController {
         return "demo";
     }
 
-    @PostMapping("/evaluate")
+    // @PostMapping("/evaluate")
     public String evaluate(@RequestParam int questionId,
             @RequestParam String studentAnswer,
             Model model) {
@@ -74,9 +73,9 @@ public class DemoController {
     private QuestionModel trasnsQuestionModel(Question question) {
         if (question != null) {
             return QuestionModel.builder()
-                    .id(question.getQuestionid())
-                    .questionText(question.getQuestiontext())
-                    .expectedAnswerText(question.getAnswertext())
+                    .id(question.getQuestionId())
+                    .questionText(question.getQuestionText())
+                    .expectedAnswerText(question.getAnswerText())
                     .build();
         }
         // 如果問題為 null，則返回 null 或者拋出異常，根據需求決定

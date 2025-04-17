@@ -3,69 +3,103 @@
   <head>
     <meta charset="UTF-8" />
     <title>編輯題目</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
-    <div class="container">
-      <!-- Add dropdown for question list -->
-      <form th:action="@{/questionEdit/edit}" method="get">
-        <label for="questionSelect">選擇題目:</label>
-        <select id="questionSelect" name="questionid" required>
-          <option
-            th:each="question : ${questions}"
-            th:value="${question.questionid}"
-            th:text="${question.questiontext}"
-          ></option>
-        </select>
-        <button type="submit">編輯</button>
-      </form>
-      <!-- Add editing section -->
-      <div th:if="${selectedQuestion != null}">
+    <div id="app" class="container">
+      <!-- Dropdown for question list -->
+      <label for="questionSelect">選擇題目:</label>
+      <select
+        v-model="selectedQuestionId"
+        @change="loadQuestion"
+        id="questionSelect"
+        required
+      >
+        <option
+          v-for="question in questions"
+          :key="question.questionId"
+          :value="question.questionId"
+        >
+          {{ question.questionText }}
+        </option>
+      </select>
+
+      <!-- Editing section -->
+      <div v-if="selectedQuestion">
         <h3>編輯題目</h3>
-        <form th:action="@{/questionEdit/save}" method="post">
-          <input
-            type="hidden"
-            name="questionid"
-            th:value="${selectedQuestion.questionid}"
-          />
+        <form @submit.prevent="saveQuestion">
           <div>
             <label for="questionText">題目內容:</label>
             <textarea
               id="questionText"
-              name="questiontext"
+              v-model="selectedQuestion.questionText"
               rows="10"
               cols="150"
               required
-              th:text="${selectedQuestion != null ? selectedQuestion.questiontext : ''}"
             ></textarea>
           </div>
           <div>
-            <label for="answertext">答案:</label>
+            <label for="answerText">答案:</label>
             <textarea
-              id="answertext"
-              name="answertext"
+              id="answerText"
+              v-model="selectedQuestion.answerText"
               rows="10"
               cols="150"
               required
-              th:text="${selectedQuestion != null ? selectedQuestion.answertext : ''}"
             ></textarea>
           </div>
           <button type="submit">儲存</button>
         </form>
-        <form
-          th:action="@{/questionEdit/delete}"
-          method="post"
-          style="margin-top: 10px"
-        >
-          <input
-            type="hidden"
-            name="questionid"
-            th:value="${selectedQuestion.questionid}"
-          />
-          <button type="submit" style="background-color: red; color: white">
-            刪除
-          </button>
-        </form>
       </div>
     </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            questions: [],
+            selectedQuestionId: null,
+            selectedQuestion: null,
+          };
+        },
+        mounted() {
+          this.fetchQuestions();
+        },
+        methods: {
+          fetchQuestions() {
+            axios.get("/question/all").then((response) => {
+              this.questions = response.data;
+            });
+          },
+          loadQuestion() {
+            if (this.selectedQuestionId) {
+              axios
+                .get(`/question/${this.selectedQuestionId}`)
+                .then((response) => {
+                  this.selectedQuestion = response.data;
+                });
+            }
+          },
+          saveQuestion() {
+            if (this.selectedQuestionId && this.selectedQuestion) {
+              axios
+                .put(
+                  `/question/${this.selectedQuestionId}`,
+                  this.selectedQuestion
+                )
+                .then(() => {
+                  alert("題目已更新");
+                })
+                .catch(() => {
+                  alert("更新失敗");
+                });
+            }
+          },
+        },
+      });
+
+      app.mount("#app");
+    </script>
   </body>
 </html>

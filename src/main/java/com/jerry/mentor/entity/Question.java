@@ -2,6 +2,7 @@ package com.jerry.mentor.entity;
 
 import java.sql.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -18,10 +19,20 @@ import lombok.Data;
 @Data
 @TableName("dblqy.question")
 public class Question {
+
     @TableId
-    private int questionid;
-    private String questiontext;
-    private String answertext; // Optional: to store the answer text if needed
-    private Date created_at; // Optional: to store the expected answer text if needed
-    private Date updated_at; // Optional: to store the expected answer text if needed
+    @TableField(value = "question_id")
+    private int questionId;
+
+    @TableField(value = "question_text")
+    private String questionText;
+
+    @TableField(value = "answer_text")
+    private String answerText; // Optional: to store the answer text if needed
+
+    @TableField(value = "created_at")
+    private Date createdAt; // Optional: to store the expected answer text if needed
+
+    @TableField(value = "updated_at")
+    private Date updatedAt; // Optional: to store the expected answer text if needed
 }
