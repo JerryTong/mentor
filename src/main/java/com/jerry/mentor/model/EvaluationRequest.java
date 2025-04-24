@@ -12,4 +12,6 @@ public class EvaluationRequest {
     private int questionId;
 
     private String studentAnswer;
+
+    private String model = "gemini-2.0-flash"; // 預設模型名稱
 }

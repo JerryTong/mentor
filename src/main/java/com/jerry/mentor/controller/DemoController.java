@@ -53,7 +53,7 @@ public class DemoController {
         QuestionModel question = trasnsQuestionModel(questionService.getQuestionById(questionId));
         List<QuestionModel> allQuestions = trasnsQuestionModel(questionService.getAllQuestions());
 
-        EvaluationResult result = evaluationService.evaluateAnswer(studentAnswer, question);
+        EvaluationResult result = evaluationService.evaluateAnswer(studentAnswer, question, "gemini-2.0-flash");
 
         model.addAttribute("studentAnswer", studentAnswer);
         model.addAttribute("result", result);

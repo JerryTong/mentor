@@ -123,6 +123,17 @@
         <h6 class="mt-3">{{ selectedQuestionText || "尚未選擇題目" }}</h6>
       </div>
 
+      <!-- 模型選擇區 -->
+      <div class="p-3">
+        <h5>請選擇模型：</h5>
+        <select v-model="selectedModel" class="form-select">
+          <option value="gemini-2.5-flash-preview-04-17">
+            gemini-2.5-flash-preview-04-17
+          </option>
+          <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+        </select>
+      </div>
+
       <!-- 聊天歷史顯示區 -->
       <div
         v-if="chatHistory.length > 0 || promptMessage"
@@ -174,6 +185,7 @@
             chatHistory: [],
             isLoading: false, // Track loading state
             promptMessage: "", // Store the prompt message
+            selectedModel: "gemini-2.5-flash-preview-04-17", // Default model
           };
         },
         mounted() {
@@ -231,7 +243,12 @@
               });
           },
           submitAnswer() {
-            if (!this.selectedQuestionId || !this.studentAnswer) return;
+            if (
+              !this.selectedQuestionId ||
+              !this.studentAnswer ||
+              !this.selectedModel
+            )
+              return;
             this.isLoading = true;
             fetch("/evaluation", {
               method: "POST",
@@ -242,6 +259,7 @@
                 questionId: this.selectedQuestionId,
                 studentAnswer: this.studentAnswer,
                 chatHistory: this.chatHistory, // Include chatHistory in the request
+                model: this.selectedModel, // Include selected model in the request
               }),
             })
               .then((response) => response.json())

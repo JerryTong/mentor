@@ -59,7 +59,7 @@ public class EvaluateController {
         subList.addAll(chatHishtory.subList(startIndex, size));
 
         EvaluationResult result = evaluationService.evaluateAnswer(question, request.getStudentAnswer(),
-                subList);
+                subList, request.getModel());
         if (result == null) {
             return ResponseEntity.badRequest().build();
         }
